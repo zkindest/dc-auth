@@ -10,23 +10,27 @@ import {
 } from "../icons/internet"
 import Input from "../Input"
 
-const LoginCard = () => {
+interface LoginCardProps {
+  join?: boolean
+}
+const LoginCard = ({ join }: LoginCardProps) => {
   const handleSubmit = () => {}
   return (
     <div className="card">
       <div className="card__logo">
-        <Link
-          href="https://devchallenges.io/challenges/N1fvBjQfhlkctmwj1tnw#"
-          aria-label="logo"
-        >
-          <img src="/devchallenges.svg" alt="logo" />
-        </Link>
+        <i>Fancy Logo here</i>
       </div>
-      <h1>Join thousands of learners from around the world</h1>
-      <p>
-        Master web development by making real-life projects. There are multiple
-        paths for you to choose
-      </p>
+      {join ? (
+        <h1>Join thousands of learners from around the world</h1>
+      ) : (
+        <h1>Login</h1>
+      )}
+      {join && (
+        <p>
+          Master web development by making real-life projects. There are
+          multiple paths for you to choose
+        </p>
+      )}
       <form onSubmit={handleSubmit}>
         <Input
           type="email"
@@ -62,27 +66,39 @@ const LoginCard = () => {
           </li>
         </ul>
         <p className="mt-5">
-          Adready a member?{" "}
-          <Link href={"/sign-in"}>
-            <a className="link">Login</a>
-          </Link>
+          {join ? (
+            <>
+              Adready a member?{" "}
+              <Link href={"/login"}>
+                <a className="link">Login</a>
+              </Link>
+            </>
+          ) : (
+            <>
+              Don’t have an account yet?{" "}
+              <Link href={"/register"}>
+                <a className="link">Register</a>
+              </Link>
+            </>
+          )}
         </p>
       </div>
       <style jsx>
         {`
-          .wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-          }
           .card {
             width: 473.83px;
-            height: 634.3px;
+            min-height: 544.37px;
+            // height: 634.3px;
             border-radius: 1.5rem;
             border: 1px solid #bdbdbd;
             padding: 3.7rem;
             color: var(--clr-text);
+          }
+          @media (max-width: 640px) {
+            .card {
+              border: 0;
+              padding: 1.5rem;
+            }
           }
           logo {
             object-fit: contain;
@@ -114,9 +130,12 @@ const LoginCard = () => {
             justify-content: center;
             list-style: none;
           }
+          li:hover {
+            color: var(--clr-blue-1);
+          }
         `}
       </style>
-      <style global jsx>
+      <style jsx global>
         {`
           .text-sm {
             font-size: 14px;
@@ -128,7 +147,7 @@ const LoginCard = () => {
             margin-bottom: 0.5rem;
           }
           .link {
-            color: blue;
+            color: var(--link-color);
           }
         `}
       </style>

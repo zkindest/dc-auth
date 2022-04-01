@@ -72,16 +72,35 @@ h6 {
 }
 
 :root {
-  --clr-text: #333333;
-  --clr-bg-elements: #fff;
-  --clr-input-active: green;
   --clr-blue-1: #2f80ed;
-  --clr-white: #fff;
 
   --clr-gray-1: #828282;
+
+  --clr-white: #fff;
+  --link-color: hsl(193 77.9% 53.9%);
+
+  --vw-sm: 640px;
+  --vw-md: 768px;
+  --vw-lg: 1024px;
+  --vw-xl: 1280px;
+  --vw-2xl: 1536px;
+}
+body.light {
+  --clr-text: #333333;
+  --clr-bg-elements: #fff;
+  --clr-input-active: #2f80ed;
 }
 body.dark {
-  --clr-text: #fff;
+  --clr-text: #e0e0e0;
   --clr-bg-elements: #252329;
-  --clr-input-active: green;
+  --clr-input-active: #2f80ed;
+}
+body {
+  background-color: var(--clr-bg-elements);
+  color: var(--clr-text);
+  transition: all 0.3s ease;
+}
+
+a {
+  color: var(--link-color);
 }

@@ -101,7 +101,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
         }
         .o_field__input:hover > fieldset {
           border-color: var(--clr-input-active);
-          border-width: 2px;
+          border-width: 1px;
         }
         .o_field__input fieldset {
           border: 1px solid #bdbdbd;

@@ -19,6 +19,9 @@ const Button = ({ children, ...rest }: ComponentPropsWithoutRef<"button">) => {
             font-weight: bold;
             color: var(--clr-white);
           }
+          button[disabled] {
+            background: gray;
+          }
         `}
       </style>
     </button>
