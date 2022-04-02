@@ -3,6 +3,8 @@ import React from "react"
 import { User } from "../../types"
 import Button from "../Button"
 
+import Image from "next/image"
+
 interface InfoCardProps {
   data: User
 }
@@ -30,7 +32,7 @@ const InfoCard = ({ data }: InfoCardProps) => {
           <div className="name">{key}</div>
           {key === "avatar" ? (
             <div className="data avatar">
-              <img src={value} alt="avatar" />
+              <Image src={"/1.png"} alt="avatar" width={100} height={100} />
             </div>
           ) : (
             <div className="data">{value}</div>

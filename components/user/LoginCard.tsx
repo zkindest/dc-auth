@@ -1,4 +1,6 @@
 import Link from "next/link"
+import { useForm } from "react-hook-form"
+import { getValidation } from "~/utils/form-validation"
 import Button from "../Button"
 import { LockIconOutline } from "../icons"
 import {
@@ -13,8 +15,16 @@ import Input from "../Input"
 interface LoginCardProps {
   join?: boolean
 }
+
 const LoginCard = ({ join }: LoginCardProps) => {
-  const handleSubmit = () => {}
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  const onSubmit = (data: any) => {
+    console.log(data)
+  }
   return (
     <div className="card">
       <div className="card__logo">
@@ -31,19 +41,25 @@ const LoginCard = ({ join }: LoginCardProps) => {
           multiple paths for you to choose
         </p>
       )}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           type="email"
-          name="email"
           placeholder="Email"
           leftAdornment={<EmailIcon />}
           className="mb-2"
+          required
+          {...register("email", getValidation({ name: "email" }))}
+          error={"email" in errors ? errors["email"].email : ""}
         />
         <Input
           type="password"
-          name="password"
           placeholder="Password"
           leftAdornment={<LockIconOutline />}
+          {...register(
+            "password",
+            getValidation({ name: "password", min: 6, max: 15, type: "string" })
+          )}
+          error={"password" in errors ? errors["password"].message : ""}
         />
         <Button type="submit" className="mt-5" fullWidth>
           Start coding now
