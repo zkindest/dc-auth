@@ -1,5 +1,4 @@
 import Layout from "../../components/Layout"
-import InfoCard from "../../components/user/InfoCard"
 import Link from "next/link"
 import EditInfoCard from "../../components/user/EditInfoCard"
 
