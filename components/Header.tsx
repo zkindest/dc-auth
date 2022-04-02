@@ -2,7 +2,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import { ThemeContext } from "../lib/theme"
-import Button from "./Button"
+import { SunnyOutline } from "./icons"
 
 const Header = () => {
   const router = useRouter()
@@ -22,9 +22,14 @@ const Header = () => {
             Login
           </a>
         </Link>
-        <div className="toggle">
-          <Button onClick={toggleTheme}>Toggle Theme</Button>
-        </div>
+        <Link href="/user/info">
+          <a data-active={isActive("/user/info")} className="link">
+            Profile
+          </a>
+        </Link>
+        <button className="toggle" onClick={toggleTheme}>
+          <SunnyOutline />
+        </button>
       </nav>
       <style jsx>
         {`
@@ -34,6 +39,11 @@ const Header = () => {
             width: 100%;
             padding: 1.5rem 0.5rem;
             margin: 0 auto;
+          }
+          @media (min-width: 1024px) {
+            header {
+              max-width: 1024px;
+            }
           }
           .logo {
             font-style: italic;
@@ -47,12 +57,10 @@ const Header = () => {
             gap: 1rem;
           }
           .toggle {
-            width: 15ch;
-          }
-          @media (min-width: 1024px) {
-            header {
-              max-width: 1024px;
-            }
+            color: var(--clr-text);
+            background: none;
+            border: 0;
+            font-size: 2rem;
           }
           a.link {
             text-decoration: none;

@@ -1,6 +1,19 @@
 import { ComponentPropsWithoutRef } from "react"
+import { BasicSizes, sizeFont, sizePadding } from "./config"
 
-const Button = ({ children, ...rest }: ComponentPropsWithoutRef<"button">) => {
+interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
+  size?: BasicSizes
+  variant?: "outline" | "filled"
+  fullWidth?: boolean
+}
+
+const Button = ({
+  size = "medium",
+  variant = "filled",
+  fullWidth,
+  children,
+  ...rest
+}: ButtonProps) => {
   return (
     <button {...rest}>
       {children}
@@ -8,19 +21,21 @@ const Button = ({ children, ...rest }: ComponentPropsWithoutRef<"button">) => {
         {`
           button {
             display: inline-block;
-            transition: color background-color 0.3s linear;
-            border: 0;
+            transition: color 0.3s ease;
+            border: ${variant === "filled"
+              ? "0"
+              : "1px solid var(--clr-gray-1)"};
             border-radius: 0.5em;
-            width: 100%;
-            min-height: 2.3em;
+            width: ${fullWidth ? "100%" : "auto"};
+            padding: ${sizePadding[size]};
             cursor: pointer;
-            background: var(--clr-blue-1);
-            font: inherit;
+            background: ${variant === "filled" ? "var(--clr-blue-1)" : "white"};
+            font-size: ${sizeFont[size]};
             font-weight: bold;
-            color: var(--clr-white);
+            color: ${variant === "filled" ? "white" : "var(--clr-gray-1)"};
           }
           button[disabled] {
-            background: gray;
+            cursor: not-allowed;
           }
         `}
       </style>

@@ -75,8 +75,13 @@ h6 {
   --clr-blue-1: #2f80ed;
 
   --clr-gray-1: #828282;
+  --clr-gray-2: #e0e0e0;
+  --clr-gray-3: #d3d3d3;
+  --clr-gray-4: #bdbdbd;
+  --clr-mediumgray-5: #4f4f4f;
 
   --clr-white: #fff;
+  --clr-black: #000;
   --link-color: hsl(193 77.9% 53.9%);
 
   --vw-sm: 640px;
@@ -89,11 +94,18 @@ body.light {
   --clr-text: #333333;
   --clr-bg-elements: #fff;
   --clr-input-active: #2f80ed;
+  --clr-white: #fff;
+  --clr-black: #000;
 }
 body.dark {
   --clr-text: #e0e0e0;
   --clr-bg-elements: #252329;
-  --clr-input-active: #2f80ed;
+  --clr-input-active: #779dcf;
+  --clr-black: #e0e0e0;
+  --clr-white: #111;
+
+  --clr-gray-2: #5c5c5c;
+  --clr-gray-3: #858585;
 }
 body {
   background-color: var(--clr-bg-elements);
@@ -103,4 +115,18 @@ body {
 
 a {
   color: var(--link-color);
+}
+
+.wrapper {
+  width: 100%;
+  text-align: center;
+}
+@media (min-width: 1024px) {
+  .wrapper {
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+}
+button {
+  cursor: pointer;
 }

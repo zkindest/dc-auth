@@ -3,6 +3,7 @@ import React, { ComponentPropsWithoutRef } from "react"
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   error?: string
   loading?: boolean
+  label?: string
   classes?: {
     root?: string
     field__body?: string
@@ -10,6 +11,7 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
     left__adornment?: string
     right__adornment?: string
     field__footer?: string
+    field__label?: string
   }
   leftAdornment?: JSX.Element
   rightAdornment?: JSX.Element
@@ -22,6 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
     classes = {},
     error,
     loading,
+    label,
     leftAdornment,
     rightAdornment,
     className,
@@ -30,15 +33,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
   const {
     root = "",
     field__body = "",
+    field__label = "",
     field__footer = "",
     field__input = "",
     left__adornment = "",
     right__adornment = "",
   } = classes
   return (
-    <div className={`o_root ${root} ${className}`}>
-      {/* <div className={classes.field__header}>
-      </div> */}
+    <div className={`o_root ${root} ${className || ""}`}>
+      {label && (
+        <label className={`o_field__label ${field__label}`}>{label}</label>
+      )}
       <div className={`o_field__body ${field__body}`}>
         <div className={`o_field__input ${field__input}`}>
           {leftAdornment && (
@@ -70,6 +75,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           font: inherit;
           color: var(--clr-text);
           width: 100%;
+        }
+        .o_field__label {
+          color: var(--clr-mediumgray-1);
         }
         .o_field__body {
         }
@@ -104,7 +112,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           border-width: 1px;
         }
         .o_field__input fieldset {
-          border: 1px solid #bdbdbd;
+          border: 1px solid var(--clr-gray-2);
           position: absolute;
           inset: 0;
           border-radius: inherit;

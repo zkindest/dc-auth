@@ -45,7 +45,7 @@ const LoginCard = ({ join }: LoginCardProps) => {
           placeholder="Password"
           leftAdornment={<LockIconOutline />}
         />
-        <Button type="submit" className="mt-5">
+        <Button type="submit" className="mt-5" fullWidth>
           Start coding now
         </Button>
       </form>

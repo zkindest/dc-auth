@@ -1,4 +1,4 @@
-import LoginCard from "../components/auth/LoginCard"
+import LoginCard from "../components/user/LoginCard"
 import Layout from "../components/Layout"
 
 const Home = () => {

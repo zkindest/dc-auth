@@ -21,12 +21,6 @@ const ErrorPage = () => (
     </Layout>
     <style jsx>
       {`
-        .wrapper {
-          width: 75%;
-          margin: 0 auto;
-          text-align: center;
-          padding-top: 4rem;
-        }
         h1 {
           font-size: 5rem;
           font-weight: 700;
