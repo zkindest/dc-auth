@@ -1,20 +1,20 @@
 import { useAtom } from "jotai"
 import Link from "next/link"
-import Router, { useRouter } from "next/router"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { userAtom } from "~/jotai/user"
-import { setJwtToken, setRefreshToken, getAuthFetchOptions } from "~/utils/auth"
+import { getAuthFetchOptions, setJwtToken, setRefreshToken } from "~/utils/auth"
 import { getValidation } from "~/utils/form-validation"
 import Button from "../Button"
-import { LockIconOutline } from "../icons"
+import { LockIconOutline, PersonOutline } from "../icons"
 import { EmailIcon } from "../icons/internet"
 import Input from "../Input"
 import { AuthProviders } from "./AuthProviders"
 
-interface LoginCardProps {}
+interface RegisterCardProps {}
 
-const LoginCard = ({}: LoginCardProps) => {
+const RegisterCard = ({}: RegisterCardProps) => {
   const {
     register,
     handleSubmit,
@@ -23,10 +23,11 @@ const LoginCard = ({}: LoginCardProps) => {
   const [_, setUser] = useAtom(userAtom)
   const [formError, setFormError] = useState("")
   const router = useRouter()
+
   const onSubmit = async (data: any) => {
     try {
       const result = await (
-        await fetch("/api/user/login", {
+        await fetch("/api/user", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -48,7 +49,7 @@ const LoginCard = ({}: LoginCardProps) => {
           })
         ).json()
 
-        console.log({ login: userResult })
+        console.log({ userResult })
 
         setUser(userResult.data)
 
@@ -64,9 +65,21 @@ const LoginCard = ({}: LoginCardProps) => {
       <div className="card__logo">
         <i>Fancy Logo here</i>
       </div>
-      <h1>Login</h1>
+      <h1>Join thousands of learners from around the world</h1>
+      <p>
+        Master web development by making real-life projects. There are multiple
+        paths for you to choose
+      </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         {formError && <p className="error">{formError}</p>}
+        <Input
+          placeholder="Name"
+          leftAdornment={<PersonOutline />}
+          className="mb-2"
+          required
+          {...register("name", getValidation({ name: "name" }))}
+          error={"name" in errors ? errors["name"].message : ""}
+        />
         <Input
           type="email"
           placeholder="Email"
@@ -74,7 +87,7 @@ const LoginCard = ({}: LoginCardProps) => {
           className="mb-2"
           required
           {...register("email", getValidation({ name: "email" }))}
-          error={"email" in errors ? errors["email"].email : ""}
+          error={"email" in errors ? errors["email"].message : ""}
         />
         <Input
           type="password"
@@ -92,9 +105,9 @@ const LoginCard = ({}: LoginCardProps) => {
       </form>
       <AuthProviders />
       <p className="mt-5">
-        Don’t have an account yet?{" "}
-        <Link href={"/register"}>
-          <a className="link">Register</a>
+        Adready a member?{" "}
+        <Link href={"/login"}>
+          <a className="link">Login</a>
         </Link>
       </p>
       <style jsx>
@@ -129,24 +142,8 @@ const LoginCard = ({}: LoginCardProps) => {
           }
         `}
       </style>
-      <style jsx global>
-        {`
-          .text-sm {
-            font-size: 14px;
-          }
-          .mt-5 {
-            margin-top: 1.25rem;
-          }
-          .mb-2 {
-            margin-bottom: 0.5rem;
-          }
-          .link {
-            color: var(--link-color);
-          }
-        `}
-      </style>
     </div>
   )
 }
 
-export default LoginCard
+export default RegisterCard

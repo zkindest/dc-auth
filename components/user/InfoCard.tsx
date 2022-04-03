@@ -10,6 +10,7 @@ interface InfoCardProps {
 }
 const InfoCard = ({ data }: InfoCardProps) => {
   const router = useRouter()
+
   return (
     <div className="info-table">
       <div className="head">
@@ -27,18 +28,24 @@ const InfoCard = ({ data }: InfoCardProps) => {
           </Button>
         </div>
       </div>
-      {Object.entries(data).map(([key, value], i) => (
-        <div className="row" key={i}>
-          <div className="name">{key}</div>
-          {key === "avatar" ? (
-            <div className="data avatar">
-              <Image src={"/1.png"} alt="avatar" width={100} height={100} />
-            </div>
-          ) : (
-            <div className="data">{value}</div>
-          )}
-        </div>
-      ))}
+      {data &&
+        Object.entries(data).map(([key, value], i) => (
+          <div className="row" key={i}>
+            <div className="name">{key}</div>
+            {key === "avatar" ? (
+              <div className="data avatar">
+                <Image
+                  src={data.avatar}
+                  alt="avatar"
+                  width={100}
+                  height={100}
+                />
+              </div>
+            ) : (
+              <div className="data">{value}</div>
+            )}
+          </div>
+        ))}
       <style jsx>
         {`
           .info-table {
@@ -67,6 +74,8 @@ const InfoCard = ({ data }: InfoCardProps) => {
           .row .data {
             font-size: 1.2rem;
             color: var(--clr-text);
+            overflow-wrap: anywhere;
+            word-break: break-all;
           }
           .row .avatar {
             width: 4.5rem;

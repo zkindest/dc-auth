@@ -1,7 +1,16 @@
 import LoginCard from "../components/user/LoginCard"
 import Layout from "../components/Layout"
+import { useRouter } from "next/router"
+import { userAtom } from "~/jotai/user"
+import { useAtom } from "jotai"
+import { useEffect } from "react"
 
 const Home = () => {
+  const router = useRouter()
+  const [user] = useAtom(userAtom)
+  useEffect(() => {
+    if (user) router.push("/user/info")
+  }, [user])
   return (
     <Layout>
       <div className="wrapper">

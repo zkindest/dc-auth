@@ -1,11 +1,20 @@
-import LoginCard from "../components/user/LoginCard"
 import Layout from "../components/Layout"
+import RegisterCard from "~/components/user/RegisterCard"
+import { useAtom } from "jotai"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { userAtom } from "~/jotai/user"
 
 const Home = () => {
+  const router = useRouter()
+  const [user] = useAtom(userAtom)
+  useEffect(() => {
+    if (user) router.push("/user/info")
+  }, [user])
   return (
     <Layout>
       <div className="wrapper">
-        <LoginCard join />
+        <RegisterCard />
         <style jsx>
           {`
             .wrapper {

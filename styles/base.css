@@ -130,3 +130,21 @@ a {
 button {
   cursor: pointer;
 }
+
+.text-sm {
+  font-size: 14px;
+}
+.mt-5 {
+  margin-top: 1.25rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.link {
+  color: var(--link-color);
+}
+.error {
+  color: red;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}

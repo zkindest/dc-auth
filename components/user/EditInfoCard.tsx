@@ -1,20 +1,33 @@
+import { User } from "@prisma/client"
 import { useAtom } from "jotai"
 import Image from "next/image"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
-import { userAtom } from "~/jotai/atoms"
+import { userAtom } from "~/jotai/user"
+import { getAuthFetchOptions } from "~/utils/auth"
 import { getValidation, validPhone } from "~/utils/form-validation"
 import Button from "../Button"
-import { FileInput } from "../FileInput"
+import FileInput from "../FileInput"
 import Input from "../Input"
 import TextArea from "../TextArea"
 
-const EditInfoCard = () => {
-  const [user, setUser] = useAtom(userAtom)
+interface EditInfoCardProps {
+  user: User
+}
+const EditInfoCard = ({ user }: EditInfoCardProps) => {
+  const router = useRouter()
+  const [_, setUser] = useAtom(userAtom)
+  const {
+    avatar: currentAvatar,
+    id,
+    password,
+    email = "",
+    ...editableTextFields
+  } = user
   const ref = useRef<FileReader>()
-  const [avatar, setAvatar] = useState<string>(user.avatar)
-  const [imageUploaded, setImageUploaded] = useState()
+  const [avatar, setAvatar] = useState(currentAvatar)
+  const [imageUploaded, setImageUpload] = useState()
   const {
     register,
     handleSubmit,
@@ -22,12 +35,12 @@ const EditInfoCard = () => {
     formState: { errors },
   } = useForm({
     mode: "onChange",
-    defaultValues: user,
+    defaultValues: editableTextFields,
   })
 
   useEffect(() => {
     // reset form values if slot info changes
-    reset(user)
+    reset(editableTextFields)
   }, [user])
 
   const handleImageLoad = (e: ProgressEvent<FileReader>) => {
@@ -51,26 +64,30 @@ const EditInfoCard = () => {
     }
 
     ref.current?.readAsDataURL(file)
-    setImageUploaded(file)
+    setImageUpload(file)
   }
   const onSubmit = async (data: any) => {
-    if (!imageUploaded) {
-      return
+    const formData = new FormData()
+    for (const key in data) {
+      formData.append(key, data[key])
+    }
+
+    if (imageUploaded) {
+      formData.append("avatar", imageUploaded)
     }
 
     try {
-      const formData = new FormData()
-      formData.append("avatar", imageUploaded)
-
       const updatedUser = await (
-        await fetch(`/api/user/${user.id}/upload`, {
-          method: "POST",
+        await fetch(`/api/user/${id}`, {
+          method: "PUT",
           body: formData,
+          ...getAuthFetchOptions(),
         })
       ).json()
 
-      setUser(updatedUser)
-      Router.push("/user/info")
+      setUser(updatedUser.data)
+
+      router.push("/user/info")
     } catch (error) {
       console.error(error)
     }
@@ -86,12 +103,18 @@ const EditInfoCard = () => {
           <div className="current">
             <Image
               src={avatar}
-              alt={`${user.name} avatar`}
+              alt={`${user?.name} avatar`}
               width={100}
               height={100}
             />
           </div>
-          <FileInput onChange={handleFileChange} accept="image/*" />
+          <FileInput
+            accept="image/*"
+            // {...register("avatar", {
+            //   onChange: handleFileChange,
+            // })}
+            onChange={handleFileChange}
+          />
         </div>
         <Input
           placeholder="Enter your name"
@@ -104,7 +127,7 @@ const EditInfoCard = () => {
         <TextArea
           placeholder="Enter your bio"
           label="Bio"
-          {...register("bio", getValidation({ name: "bio", min: 120 }))}
+          {...register("bio", getValidation({ name: "bio", min: 50 }))}
           error={"bio" in errors ? errors["bio"]?.message : ""}
         />
         <br />
@@ -116,15 +139,17 @@ const EditInfoCard = () => {
           {...register("phone", validPhone)}
         />
         <br />
-        <Input
+        {/* TODO: Implemetn email change */}
+        {/* <Input
           placeholder="Enter your email"
           type={"email"}
           label="Email"
           {...register("email", getValidation({ name: "email" }))}
           error={"email" in errors ? errors["email"]?.message : ""}
         />
-        <br />
-        <Input
+        <br /> */}
+        {/* TODO: Implement change password */}
+        {/* <Input
           placeholder="Enter your new password"
           label="Password"
           {...register(
@@ -133,7 +158,7 @@ const EditInfoCard = () => {
           )}
           error={"password" in errors ? errors["password"]?.message : ""}
         />
-        <br />
+        <br /> */}
         <Button type="submit">Save</Button>
       </form>
       <style jsx>{`

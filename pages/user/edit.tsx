@@ -1,8 +1,20 @@
 import Layout from "../../components/Layout"
 import Link from "next/link"
 import EditInfoCard from "../../components/user/EditInfoCard"
+import { useAtom } from "jotai"
+import { useRouter } from "next/router"
+import { userAtom } from "~/jotai/user"
+import { useEffect } from "react"
 
 const Edit = () => {
+  const [user] = useAtom(userAtom)
+  const router = useRouter()
+  useEffect(() => {
+    if (!user) router.push("/login")
+  }, [user])
+  if (!user) {
+    return null
+  }
   return (
     <Layout>
       <div className="wrapper">
@@ -10,7 +22,7 @@ const Edit = () => {
           <Link href={"/user/info"}>
             <a className="link ">Back</a>
           </Link>
-          <EditInfoCard />
+          <EditInfoCard user={user} />
         </section>
       </div>
       <style jsx>{`

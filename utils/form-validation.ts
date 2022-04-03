@@ -7,7 +7,12 @@ interface GetValidation {
   max?: number
 }
 
-export const getValidation = ({ max, min, type, name }: GetValidation) => {
+export const getValidation = ({
+  max,
+  min,
+  type = "string",
+  name,
+}: GetValidation) => {
   const itemType = type === "string" ? "characters" : "digits"
   return {
     required: `${name} required`,

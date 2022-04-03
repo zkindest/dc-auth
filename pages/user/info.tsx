@@ -1,16 +1,19 @@
+import { useAtom } from "jotai"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { userAtom } from "~/jotai/user"
 import Layout from "../../components/Layout"
 import InfoCard from "../../components/user/InfoCard"
-import { User } from "../../types"
 
-export const user: User = {
-  avatar: "/1.png",
-  name: "Rock",
-  bio: "I am a software developer and a big fan of devchallenges...",
-  phone: "908249274292",
-  email: "xanthe.neal@gmail.com",
-  password: "************",
-}
 const Info = () => {
+  const [user] = useAtom(userAtom)
+  const router = useRouter()
+  useEffect(() => {
+    if (!user) router.push("/login")
+  }, [user])
+  if (!user) {
+    return null
+  }
   return (
     <Layout>
       <div className="wrapper">

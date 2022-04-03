@@ -1,7 +1,11 @@
+import { useAtom } from "jotai"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext } from "react"
+import { userAtom } from "~/jotai/user"
+import { removeJwtTokens } from "~/utils/auth"
 import { ThemeContext } from "../lib/theme"
+import Button from "./Button"
 import { SunnyOutline } from "./icons"
 
 const Header = () => {
@@ -9,6 +13,20 @@ const Header = () => {
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname
   const { toggleTheme } = useContext(ThemeContext)
+  const [user, setUser] = useAtom(userAtom)
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/user/logout", {
+        method: "GET",
+      })
+      sessionStorage.clear()
+      setUser(null)
+      router.push("/login")
+    } catch (error) {
+      console.error(error)
+    }
+    removeJwtTokens()
+  }
   return (
     <header>
       <Link href="/">
@@ -17,16 +35,23 @@ const Header = () => {
         </a>
       </Link>
       <nav>
-        <Link href="/login">
-          <a data-active={isActive("/login")} className="link">
-            Login
-          </a>
-        </Link>
-        <Link href="/user/info">
-          <a data-active={isActive("/user/info")} className="link">
-            Profile
-          </a>
-        </Link>
+        {!user && (
+          <Link href="/login">
+            <a data-active={isActive("/login")} className="link">
+              Login
+            </a>
+          </Link>
+        )}
+        {user && (
+          <>
+            <Link href="/user/info">
+              <a data-active={isActive("/user/info")} className="link">
+                Profile
+              </a>
+            </Link>
+            <Button onClick={handleLogout}>Logout</Button>
+          </>
+        )}
         <button className="toggle" onClick={toggleTheme}>
           <SunnyOutline />
         </button>
