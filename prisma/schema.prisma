@@ -8,17 +8,26 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String
-  bio   String
-  phone String
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  name     String
+  bio      String
+  phone    String
   password String
-  avatar String
+  avatar   String
+  session  Session?
+}
+
+model Session {
+  id                    Int    @id @default(autoincrement())
+  userId                Int    @unique
+  refreshToken          String
+  refreshTokenExpiresAt String
+  user                  User?  @relation(fields: [userId], references: [id])
 }
 
 model Avatar {
-  id       String @default(cuid()) @id
+  id       String @id @default(cuid())
   publicId String @unique
   format   String
   version  String

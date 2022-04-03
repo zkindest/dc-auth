@@ -1,8 +1,4 @@
-export interface User {
-  avatar: string
-  name: string
-  bio: string
-  phone: string
-  email: string
-  password: string
+export type DecodedUser = {
+  id: number
+  [x: string]: any
 }
