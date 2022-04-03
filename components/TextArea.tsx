@@ -1,4 +1,5 @@
 import React, { ComponentPropsWithoutRef } from "react"
+import { useId } from "@reach/auto-id"
 
 interface TextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
   error?: string
@@ -13,7 +14,8 @@ interface TextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
 }
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextField(props, ref) {
-    const { classes = {}, error, label, className, ...rest } = props
+    const { classes = {}, error, label, className, id, ...rest } = props
+    const randId = useId(id)
     const {
       root = "",
       field__body = "",
@@ -24,16 +26,21 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <div className={`o_root ${root} ${className}`}>
         {label && (
-          <label className={`o_field__label ${field__label}`}>{label}</label>
+          <label className={`o_field__label ${field__label}`} htmlFor={randId}>
+            {label}
+          </label>
         )}
         <div className={`o_field__body ${field__body}`}>
           <div className={`o_field__input ${field__input}`}>
-            <textarea ref={ref} {...rest} />
-            <fieldset aria-hidden="true"></fieldset>
+            <textarea ref={ref} {...rest} id={randId} />
+            <fieldset
+              aria-hidden="true"
+              className={error ? "field__error" : ""}
+            ></fieldset>
           </div>
         </div>
         <div className={`o_field__footer ${field__footer}`}>
-          {error && <p className="error">{error}</p>}
+          {error && <p className="field__error">{error}</p>}
         </div>
         <style jsx>{`
           .o_root {
@@ -50,7 +57,13 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           .o_field__footer {
             padding: 0.2em;
             font-size: 0.8em;
-            font-weight: bold;
+            text-align: left;
+          }
+          .o_field__input fieldset.field__error {
+            border-color: red !important;
+          }
+          p.field__error {
+            color: red;
           }
           .o_field__input {
             position: relative;

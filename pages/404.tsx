@@ -7,7 +7,7 @@ const ErrorPage = () => (
     <Layout>
       <div className="wrapper">
         <h1>Oops!</h1>
-        <h3>This is clearly not the page you're looking for.</h3>
+        <h3>This is clearly not the page you&apos;re looking for.</h3>
         <p>
           Looks like the page you&apos;re looking for does not exist, or the
           link that got you here is outdated or broken. You may find what

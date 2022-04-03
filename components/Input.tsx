@@ -1,4 +1,5 @@
 import React, { ComponentPropsWithoutRef } from "react"
+import { useId } from "@reach/auto-id"
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   error?: string
@@ -28,8 +29,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
     leftAdornment,
     rightAdornment,
     className,
+    id,
     ...rest
   } = props
+  const randId = useId(id)
   const {
     root = "",
     field__body = "",
@@ -42,7 +45,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
   return (
     <div className={`o_root ${root} ${className || ""}`}>
       {label && (
-        <label className={`o_field__label ${field__label}`}>{label}</label>
+        <label className={`o_field__label ${field__label}`} htmlFor={randId}>
+          {label}
+        </label>
       )}
       <div className={`o_field__body ${field__body}`}>
         <div className={`o_field__input ${field__input}`}>
@@ -54,7 +59,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
               {leftAdornment}
             </div>
           )}
-          <input type="text" ref={ref} {...rest} />
+          <input type="text" ref={ref} {...rest} id={randId} />
           {rightAdornment && (
             <div
               className={`o_right-admt ${right__adornment}`}
@@ -63,11 +68,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
               {rightAdornment}
             </div>
           )}
-          <fieldset aria-hidden="true"></fieldset>
+          <fieldset
+            aria-hidden="true"
+            className={error ? "field__error" : ""}
+          ></fieldset>
         </div>
       </div>
       <div className={`o_field__footer ${field__footer}`}>
-        {error && <p className="error">{error}</p>}
+        {error && <p className="field__error">{error}</p>}
       </div>
       <style jsx>{`
         .o_root {
@@ -84,7 +92,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
         .o_field__footer {
           padding: 0.2em;
           font-size: 0.8em;
-          font-weight: bold;
+          text-align: left;
+        }
+        .o_field__input fieldset.field__error {
+          border-color: red !important;
+        }
+        p.field__error {
+          color: red;
         }
         .o_field__input {
           position: relative;
