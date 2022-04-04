@@ -4,6 +4,7 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { userAtom } from "~/jotai/user"
+import ErrorBoundary from "~/components/ErrorBoundary"
 
 const Home = () => {
   const router = useRouter()
@@ -14,7 +15,9 @@ const Home = () => {
   return (
     <Layout>
       <div className="wrapper">
-        <RegisterCard />
+        <ErrorBoundary>
+          <RegisterCard />
+        </ErrorBoundary>
         <style jsx>
           {`
             .wrapper {
