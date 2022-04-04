@@ -11,7 +11,7 @@ const Home = () => {
   const [user] = useAtom(userAtom)
   useEffect(() => {
     if (user) router.push("/user/info")
-  }, [user])
+  }, [user, router])
   return (
     <Layout>
       <div className="wrapper">

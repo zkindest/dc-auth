@@ -12,7 +12,7 @@ const Edit = () => {
   const router = useRouter()
   useEffect(() => {
     if (!user) router.push("/login")
-  }, [user])
+  }, [user, router])
   if (!user) {
     return null
   }
@@ -24,7 +24,7 @@ const Edit = () => {
             <Link href={"/user/info"}>
               <a className="link ">Back</a>
             </Link>
-            <EditInfoCard user={user} />
+            <EditInfoCard data={user} />
           </section>
         </div>
         <style jsx>{`

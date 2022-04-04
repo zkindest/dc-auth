@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     } catch (err) {
       console.error(err)
     }
-  }, [])
+  }, [setUser])
   return (
     <ThemeProvider>
       <Component {...pageProps} />

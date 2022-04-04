@@ -13,12 +13,12 @@ import Input from "../Input"
 import TextArea from "../TextArea"
 
 interface EditInfoCardProps {
-  user: IUser
+  data: IUser
 }
-const EditInfoCard = ({ user }: EditInfoCardProps) => {
+const EditInfoCard = ({ data }: EditInfoCardProps) => {
   const router = useRouter()
   const [_, setUser] = useAtom(userAtom)
-  const { id, email, ...editableTextFields } = user
+  const { id, email, ...editableTextFields } = data
   const ref = useRef<FileReader>()
   const [currentAvatar, setCurrentAvatar] = useState(editableTextFields.avatar)
   const {
@@ -34,7 +34,8 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
   useEffect(() => {
     // reset form values if slot info changes
     reset(editableTextFields)
-  }, [user])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
 
   const handleImageLoad = (e: ProgressEvent<FileReader>) => {
     if (e.target?.result) {
@@ -97,7 +98,7 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
           <div className="current">
             <Image
               src={currentAvatar}
-              alt={`${user?.name} avatar`}
+              alt={`${data?.name} avatar`}
               width={100}
               height={100}
             />

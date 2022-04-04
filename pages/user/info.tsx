@@ -11,7 +11,7 @@ const Info = () => {
   const router = useRouter()
   useEffect(() => {
     if (!user) router.push("/login")
-  }, [user])
+  }, [user, router])
   if (!user) {
     return null
   }
