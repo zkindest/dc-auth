@@ -49,6 +49,6 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "engines": {
-    "node": "16.x"
+    "node": "14.x"
   }
 }

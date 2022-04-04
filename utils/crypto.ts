@@ -42,7 +42,7 @@ export function uuidv4(): string {
     (
       c ^
       // @ts-ignore
-      (crypto.webcrypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      (crypto.randomFillSync(new Uint8Array(1))[0] & (15 >> (c / 4)))
     ).toString(16)
   )
 }
