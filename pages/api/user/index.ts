@@ -8,6 +8,7 @@ import {
 import crypto from "crypto"
 import md5 from "md5"
 import { parseToken } from "~/utils"
+import { Prisma } from "@prisma/client"
 
 export const getUserFromToken = (req: NextApiRequest, res: NextApiResponse) => {
   const rawToken = req.headers["authorization"] || ""
@@ -18,11 +19,26 @@ export const getUserFromToken = (req: NextApiRequest, res: NextApiResponse) => {
   }
   return user
 }
-export const getUserFromDB = async (userId: number) => {
+export const UserSelect: Prisma.UserSelect = {
+  avatar: true,
+  id: true,
+  bio: true,
+  email: true,
+  name: true,
+  phone: true,
+}
+
+export const getUserFromDB = async (
+  userId: number,
+  options?: {
+    select?: Prisma.UserSelect
+  }
+) => {
   return await prisma.user.findUnique({
     where: {
       id: userId,
     },
+    select: (options && options.select) || UserSelect,
   })
 }
 export default async function handler(

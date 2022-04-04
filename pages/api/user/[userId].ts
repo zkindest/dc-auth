@@ -57,9 +57,8 @@ export default async function handler(
             return res.status(400).json({ error: "user not authenticated" })
 
           const { files, fields } = await formidableParse(req)
-          // const { files, fields } = JSON.parse(raw)
 
-          console.log({ fields })
+          // console.log({ fields, files })
 
           let data = { ...fields }
           if (files && files.avatar) {
