@@ -1,12 +1,12 @@
 import { useRouter } from "next/router"
 import React from "react"
-import { User } from "../../types"
+import { IUser } from "~/types"
 import Button from "../Button"
 
 import Image from "next/image"
 
 interface InfoCardProps {
-  data: User
+  data: IUser
 }
 const InfoCard = ({ data }: InfoCardProps) => {
   const router = useRouter()
@@ -28,7 +28,7 @@ const InfoCard = ({ data }: InfoCardProps) => {
           </Button>
         </div>
       </div>
-      {data &&
+      {Object.keys(data).length !== 0 &&
         Object.entries(data).map(([key, value], i) => (
           <div className="row" key={i}>
             <div className="name">{key}</div>

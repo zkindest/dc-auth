@@ -1,10 +1,10 @@
 import { useAtom } from "jotai"
 import Link from "next/link"
-import Router, { useRouter } from "next/router"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { userAtom } from "~/jotai/user"
-import { setJwtToken, setRefreshToken, getAuthFetchOptions } from "~/utils/auth"
+import { getAuthFetchOptions, setJwtToken, setRefreshToken } from "~/utils/auth"
 import { getValidation } from "~/utils/form-validation"
 import Button from "../Button"
 import { LockIconOutline } from "../icons"
@@ -47,8 +47,6 @@ const LoginCard = ({}: LoginCardProps) => {
             ...getAuthFetchOptions(),
           })
         ).json()
-
-        console.log({ login: userResult })
 
         setUser(userResult.data)
 
@@ -93,7 +91,7 @@ const LoginCard = ({}: LoginCardProps) => {
       <AuthProviders />
       <p className="mt-5">
         Don’t have an account yet?{" "}
-        <Link href={"/register"}>
+        <Link href={"/"}>
           <a className="link">Register</a>
         </Link>
       </p>

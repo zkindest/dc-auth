@@ -1,4 +1,4 @@
-import { User } from "@prisma/client"
 import { atom } from "jotai"
+import { IUser } from "~/types"
 
-export const userAtom = atom<User | null>(null)
+export const userAtom = atom<IUser | null>(null)

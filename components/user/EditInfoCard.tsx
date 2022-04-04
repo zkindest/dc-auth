@@ -1,10 +1,10 @@
-import { User } from "@prisma/client"
 import { useAtom } from "jotai"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { userAtom } from "~/jotai/user"
+import { IUser } from "~/types"
 import { getAuthFetchOptions } from "~/utils/auth"
 import { getValidation, validPhone } from "~/utils/form-validation"
 import Button from "../Button"
@@ -13,21 +13,14 @@ import Input from "../Input"
 import TextArea from "../TextArea"
 
 interface EditInfoCardProps {
-  user: User
+  user: IUser
 }
 const EditInfoCard = ({ user }: EditInfoCardProps) => {
   const router = useRouter()
   const [_, setUser] = useAtom(userAtom)
-  const {
-    avatar: currentAvatar,
-    id,
-    password,
-    email = "",
-    ...editableTextFields
-  } = user
+  const { id, email, ...editableTextFields } = user
   const ref = useRef<FileReader>()
-  const [avatar, setAvatar] = useState(currentAvatar)
-  const [imageUploaded, setImageUpload] = useState()
+  const [currentAvatar, setCurrentAvatar] = useState(editableTextFields.avatar)
   const {
     register,
     handleSubmit,
@@ -45,7 +38,7 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
 
   const handleImageLoad = (e: ProgressEvent<FileReader>) => {
     if (e.target?.result) {
-      setAvatar(e.target?.result as string)
+      setCurrentAvatar(e.target?.result as string)
     }
   }
   useEffect(() => {
@@ -64,16 +57,17 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
     }
 
     ref.current?.readAsDataURL(file)
-    setImageUpload(file)
   }
   const onSubmit = async (data: any) => {
     const formData = new FormData()
     for (const key in data) {
+      if (key === "avatar") {
+        if (data[key] instanceof FileList) {
+          formData.append(key, data[key][0])
+        }
+        continue
+      }
       formData.append(key, data[key])
-    }
-
-    if (imageUploaded) {
-      formData.append("avatar", imageUploaded)
     }
 
     try {
@@ -102,7 +96,7 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
         <div className="avatar">
           <div className="current">
             <Image
-              src={avatar}
+              src={currentAvatar}
               alt={`${user?.name} avatar`}
               width={100}
               height={100}
@@ -110,10 +104,9 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
           </div>
           <FileInput
             accept="image/*"
-            // {...register("avatar", {
-            //   onChange: handleFileChange,
-            // })}
-            onChange={handleFileChange}
+            {...register("avatar", {
+              onChange: handleFileChange,
+            })}
           />
         </div>
         <Input

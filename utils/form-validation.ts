@@ -36,4 +36,5 @@ export const validPhone = {
     value: /\d{9,15}/,
     message: "please enter valid phone",
   },
+  required: undefined,
 }
