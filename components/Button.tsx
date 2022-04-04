@@ -29,13 +29,18 @@ const Button = ({
             width: ${fullWidth ? "100%" : "auto"};
             padding: ${sizePadding[size]};
             cursor: pointer;
-            background: ${variant === "filled" ? "var(--clr-blue-1)" : "white"};
+            background: ${variant === "filled"
+              ? "var(--clr-blue-1)"
+              : "var(--clr-white)"};
             font-size: ${sizeFont[size]};
             font-weight: bold;
-            color: ${variant === "filled" ? "white" : "var(--clr-gray-1)"};
+            color: ${variant === "filled" ? "#eee" : "var(--clr-gray-1)"};
           }
           button[disabled] {
             cursor: not-allowed;
+            background: ${variant === "filled"
+              ? "var(--clr-blue-2)"
+              : "var(--clr-white)"};
           }
         `}
       </style>

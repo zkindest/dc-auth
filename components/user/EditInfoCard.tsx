@@ -120,7 +120,10 @@ const EditInfoCard = ({ user }: EditInfoCardProps) => {
         <TextArea
           placeholder="Enter your bio"
           label="Bio"
-          {...register("bio", getValidation({ name: "bio", min: 50 }))}
+          {...register(
+            "bio",
+            getValidation({ req: false, name: "bio", min: 50 })
+          )}
           error={"bio" in errors ? errors["bio"]?.message : ""}
         />
         <br />

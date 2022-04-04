@@ -73,6 +73,7 @@ h6 {
 
 :root {
   --clr-blue-1: #2f80ed;
+  --clr-blue-2: #a5c5eed5;
 
   --clr-gray-1: #828282;
   --clr-gray-2: #e0e0e0;
@@ -95,14 +96,18 @@ body.light {
   --clr-bg-elements: #fff;
   --clr-input-active: #2f80ed;
   --clr-white: #fff;
+  --clr-white-1: #eee;
   --clr-black: #000;
 }
 body.dark {
+  --clr-blue-2: lightgray;
+
   --clr-text: #e0e0e0;
   --clr-bg-elements: #252329;
   --clr-input-active: #779dcf;
   --clr-black: #e0e0e0;
   --clr-white: #111;
+  --clr-white-1: #333;
 
   --clr-gray-2: #5c5c5c;
   --clr-gray-3: #858585;

@@ -73,10 +73,11 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
           input + label {
             font-size: 1.25em;
             font-weight: 700;
-            color: white;
-            background-color: black;
+            color: #eee;
+            background-color: var(--clr-blue-1);
             display: inline-block;
             padding: 0.1em 0.5em;
+            transition: color 0.3s ease;
           }
           input:focus + label,
           input + label:hover {

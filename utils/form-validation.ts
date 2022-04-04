@@ -5,6 +5,7 @@ interface GetValidation {
   type?: "string" | "number"
   min?: number
   max?: number
+  req?: boolean
 }
 
 export const getValidation = ({
@@ -12,10 +13,11 @@ export const getValidation = ({
   min,
   type = "string",
   name,
+  req = true,
 }: GetValidation) => {
   const itemType = type === "string" ? "characters" : "digits"
   return {
-    required: `${name} required`,
+    required: req ? `${name} required` : undefined,
     minLength: min
       ? {
           value: min,
@@ -31,10 +33,15 @@ export const getValidation = ({
   } as RegisterOptions
 }
 export const validPhone = {
-  ...getValidation({ name: "phone", type: "number", min: 9, max: 15 }),
+  ...getValidation({
+    name: "phone",
+    type: "number",
+    min: 9,
+    max: 15,
+    req: false,
+  }),
   pattern: {
     value: /\d{9,15}/,
     message: "please enter valid phone",
   },
-  required: undefined,
 }
