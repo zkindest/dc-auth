@@ -7,6 +7,7 @@ import {
 import { getCookie } from "~/utils"
 import { sha256, uuidv4 } from "~/utils/crypto"
 import tokenGenerator from "~/utils/TokenGenerator"
+import prisma from "~/lib/prisma"
 
 export default async function handler(
   req: NextApiRequest,

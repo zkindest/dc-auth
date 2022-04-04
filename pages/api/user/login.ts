@@ -6,6 +6,7 @@ import {
   setFingerprintCookieAndSignJwt,
 } from "~/utils/crypto"
 import crypto from "crypto"
+import prisma from "~/lib/prisma"
 
 export default async function handler(
   req: NextApiRequest,
