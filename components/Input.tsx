@@ -94,9 +94,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           font-size: 0.8em;
           text-align: left;
         }
-        .o_field__input fieldset.field__error {
-          border-color: red !important;
-        }
         p.field__error {
           color: red;
         }
@@ -107,7 +104,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           background-color: var(--clr-bg-elements);
           border-radius: 8px;
         }
-        .o_field__input input {
+        .o_field__input:hover > fieldset {
+          border-color: var(--clr-input-active);
+          border-width: 1px;
+        }
+        input {
           border: 0;
           outline: 0;
           padding-left: 0.5em;
@@ -117,13 +118,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           color: var(--clr-text);
           border-radius: inherit;
         }
-        .o_field__input input:focus ~ fieldset {
-          border-width: 2px;
-          border-color: var(--clr-input-active);
-        }
-        .o_field__input:hover > fieldset {
-          border-color: var(--clr-input-active);
-          border-width: 1px;
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px var(--clr-bg-elements) inset !important;
+          -webkit-text-fill-color: var(--clr-text) !important;
         }
         .o_field__input fieldset {
           border: 1px solid var(--clr-gray-2);
@@ -131,6 +131,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           inset: 0;
           border-radius: inherit;
           pointer-events: none;
+        }
+        input:focus ~ fieldset {
+          border-width: 2px;
+          border-color: var(--clr-input-active);
+        }
+        .o_field__input fieldset.field__error {
+          border-color: red !important;
         }
         .o_left-admt,
         .o_right-admt {

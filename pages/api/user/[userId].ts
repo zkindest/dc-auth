@@ -5,7 +5,7 @@ import { uploadImage } from "~/utils/cloudinary"
 import { formidableParse } from "~/utils/formidable"
 import prisma from "~/lib/prisma"
 import { parseToken } from "~/utils"
-import { getUserFromDB } from "."
+import { getUserFromDB, UserSelect } from "."
 
 export const isAuthenticated = (req: NextApiRequest, res: NextApiResponse) => {
   const rawToken = req.headers["authorization"] || ""
@@ -79,6 +79,7 @@ export default async function handler(
               id: userId,
             },
             data: data,
+            select: UserSelect,
           })
           res.status(200).json({ data: updatedUser })
         } catch (err) {
