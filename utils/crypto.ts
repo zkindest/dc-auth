@@ -1,14 +1,6 @@
-import { promisify } from "node:util"
 import crypto from "node:crypto"
-import {
-  FINGERPRINT_COOKIE_NAME,
-  FINGERPRINT_COOKIE_MAX_AGE,
-  IS_PROD,
-  JWT_TOKEN_EXPIRES_IN,
-} from "~/constants"
+import { promisify } from "node:util"
 import tokenGenerator from "./TokenGenerator"
-import { NextApiResponse } from "next"
-import { serialize } from "cookie"
 
 const scrypt = promisify(crypto.scrypt)
 
@@ -47,29 +39,9 @@ export function uuidv4(): string {
   )
 }
 
-export function setFingerprintCookieAndSignJwt(
-  fingerprint: string,
-  res: NextApiResponse,
-  user: { id: number }
-) {
-  res.setHeader(
-    "Set-Cookie",
-    serialize(FINGERPRINT_COOKIE_NAME, fingerprint, {
-      path: "/",
-      maxAge: FINGERPRINT_COOKIE_MAX_AGE,
-      httpOnly: true,
-      secure: IS_PROD,
-      sameSite: IS_PROD ? "none" : "lax",
-    })
-  )
-
+export function SignWithUserClaims(user: { id: number }, fingerprint?: string) {
   return tokenGenerator.signWithClaims({
-    allowedRoles: ["user"],
-    defaultRole: "user",
-    expiresIn: JWT_TOKEN_EXPIRES_IN,
-    otherClaims: {
-      "X-Hasura-User-Id": String(user.id),
-      "X-User-Fingerprint": sha256(fingerprint),
-    },
+    "X-Auth-User-Id": String(user.id),
+    ...(fingerprint ? { "X-Auth-FingerPrint": fingerprint } : null),
   })
 }

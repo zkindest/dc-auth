@@ -1,14 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import prisma from "~/lib/prisma"
-import {
-  hashPassword,
-  setFingerprintCookieAndSignJwt,
-  uuidv4,
-} from "~/utils/crypto"
-import crypto from "crypto"
-import md5 from "md5"
-import { parseToken } from "~/utils"
 import { Prisma } from "@prisma/client"
+import md5 from "md5"
+import { NextApiRequest, NextApiResponse } from "next"
+import { loginCookieAge, loginCookieName, refreshTokenTtl } from "~/constants"
+import prisma from "~/lib/prisma"
+import { parseToken, setHardCookie } from "~/utils"
+import { hashPassword, SignWithUserClaims, uuidv4 } from "~/utils/crypto"
+import crypto from "crypto"
 
 export const getUserFromToken = (req: NextApiRequest, res: NextApiResponse) => {
   const rawToken = req.headers["authorization"] || ""
@@ -51,10 +48,10 @@ export default async function handler(
       case "GET": {
         const decodedUser = getUserFromToken(req, res)
         if (!decodedUser)
-          return res.status(400).json({ error: "user not authenticated" })
+          return res.status(400).json({ error: "Invalid credentials" })
 
         const user = await getUserFromDB(decodedUser.id)
-        if (!user) return res.status(400).json({ error: "user not found" })
+        if (!user) return res.status(400).json({ error: "User not found" })
         return res.json({ data: user })
       }
       case "POST": {
@@ -66,7 +63,7 @@ export default async function handler(
           },
         })
         if (user) {
-          res.status(400).json({ error: "user already exists" })
+          res.status(400).json({ error: "User already exists" })
           return
         }
         const refreshToken = uuidv4()
@@ -83,8 +80,10 @@ export default async function handler(
             password: await hashPassword(password),
             session: {
               create: {
-                refreshToken: "",
-                refreshTokenExpiresAt: "",
+                refreshToken: refreshToken,
+                refreshTokenExpiresAt: new Date(
+                  Date.now() + refreshTokenTtl
+                ).toISOString(),
               },
             },
           },
@@ -94,7 +93,11 @@ export default async function handler(
         const fingerprint = crypto.randomBytes(50).toString("hex")
         // Add the fingerprint in a hardened cookie to prevent Token Sidejacking
         // https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html#token-sidejacking
-        const jwt = setFingerprintCookieAndSignJwt(fingerprint, res, newUser)
+        setHardCookie(loginCookieName, fingerprint, res, {
+          maxAge: loginCookieAge,
+        })
+        const jwt = SignWithUserClaims(newUser, fingerprint)
+
         return res.status(200).json({ data: { jwt, refreshToken } })
       }
       default:

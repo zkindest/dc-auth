@@ -25,7 +25,7 @@ model Session {
   id                    Int    @id @default(autoincrement())
   userId                Int    @unique
   refreshToken          String
-  refreshTokenExpiresAt String
+  refreshTokenExpiresAt String?
   user                  User?  @relation(fields: [userId], references: [id])
 }
 

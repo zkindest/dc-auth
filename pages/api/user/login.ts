@@ -1,12 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { getRefreshTokenExpiryTime } from "~/constants"
-import {
-  checkPassword,
-  uuidv4,
-  setFingerprintCookieAndSignJwt,
-} from "~/utils/crypto"
+import { loginCookieAge, loginCookieName, refreshTokenTtl } from "~/constants"
+import { checkPassword, uuidv4, SignWithUserClaims } from "~/utils/crypto"
 import crypto from "crypto"
 import prisma from "~/lib/prisma"
+import { setHardCookie } from "~/utils"
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,10 +24,11 @@ export default async function handler(
       const validPassword = await checkPassword(password, user.password)
 
       if (!validPassword) {
-        return res.status(400).json({ error: "Invalid credentials" })
+        return res.status(401).json({ error: "Invalid credentials" })
       }
       // Update user refresh token and refresh token expiration
       const refreshToken = uuidv4()
+
       await prisma.session.update({
         where: {
           userId: user.id,
@@ -38,7 +36,7 @@ export default async function handler(
         data: {
           refreshToken,
           refreshTokenExpiresAt: new Date(
-            Date.now() + getRefreshTokenExpiryTime()
+            Date.now() + refreshTokenTtl
           ).toISOString(),
         },
       })
@@ -47,7 +45,10 @@ export default async function handler(
 
       // Add the fingerprint in a hardened cookie to prevent Token Sidejacking
       // https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html#token-sidejacking
-      const jwt = setFingerprintCookieAndSignJwt(fingerprint, res, user)
+      setHardCookie(loginCookieName, fingerprint, res, {
+        maxAge: loginCookieAge,
+      })
+      const jwt = SignWithUserClaims(user, fingerprint)
 
       return res.status(200).json({
         data: {

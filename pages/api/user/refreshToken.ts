@@ -1,13 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import {
-  FINGERPRINT_COOKIE_NAME,
-  getRefreshTokenExpiryTime,
-  JWT_REFRESH_TOKEN_EXPIRES_IN,
-} from "~/constants"
-import { getCookie } from "~/utils"
-import { sha256, uuidv4 } from "~/utils/crypto"
-import tokenGenerator from "~/utils/TokenGenerator"
+import { loginCookieName, refreshTokenTtl } from "~/constants"
 import prisma from "~/lib/prisma"
+import { getCookie } from "~/utils"
+import { sha256, SignWithUserClaims, uuidv4 } from "~/utils/crypto"
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,13 +12,11 @@ export default async function handler(
     if (req.method === "POST") {
       const { refreshToken, fingerPrintHash } = req.body
 
-      const fingerprintCookie = getCookie(
-        req.headers.cookie,
-        FINGERPRINT_COOKIE_NAME
-      )
+      // get raw cookie from req headers
+      const fingerprintCookie = getCookie(req.headers.cookie, loginCookieName)
       console.log({ fingerprintCookie })
       if (!fingerprintCookie) {
-        return res.status(400).json({ error: "Unable to refresh JWT token" })
+        return res.status(401).json({ error: "invalid signature" })
       }
 
       // Compute a SHA256 hash of the received fingerprint in cookie in order to compare
@@ -36,38 +29,33 @@ export default async function handler(
       })
 
       if (fingerPrintHash != fingerprintCookieHash) {
-        return res.status(400).json({ error: "Unable to refresh JWT token" })
+        return res.status(401).json({ error: "invalid signature" })
       }
 
+      // check User's refreshToken validity
       const user = await prisma.session.findFirst({
         where: {
           refreshToken,
         },
       })
-      if (!user) return res.status(400).json({ error: "user not found" })
+      if (!user) return res.status(400).json({ error: "refreshToken expired" })
 
       await prisma.session.update({
         where: {
           id: user.id,
         },
         data: {
-          refreshToken: uuidv4(),
+          refreshToken: uuidv4(), // Re-New refresh token
           refreshTokenExpiresAt: new Date(
-            Date.now() + getRefreshTokenExpiryTime()
+            Date.now() + refreshTokenTtl
           ).toISOString(),
         },
       })
-      const jwt = tokenGenerator.signWithClaims({
-        expiresIn: JWT_REFRESH_TOKEN_EXPIRES_IN,
-        allowedRoles: ["user"],
-        defaultRole: "user",
-        otherClaims: {
-          "X-Hasura-User-Id": String(user.id),
-        },
-      })
+      const jwt = SignWithUserClaims(user)
+
       return res.status(200).json({
         data: {
-          jwt,
+          jwt, // we are not sending refreshToken (one time refresh only)
         },
       })
     }

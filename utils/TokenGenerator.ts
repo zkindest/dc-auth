@@ -1,16 +1,10 @@
 // source: https://gist.github.com/ziluvatar/a3feb505c4c0ec37059054537b38fc48
 import jwt, { Secret, SignOptions, VerifyOptions } from "jsonwebtoken"
-import { JWT_SECRET, JWT_TOKEN_EXPIRES_IN } from "~/constants"
+import { jwtSecret, jwtTtl, jwtClaims } from "~/constants"
 
 interface RefreshOptions {
   verify?: Exclude<VerifyOptions, "jwtid">
   jwtid?: string
-}
-interface JWTParams {
-  allowedRoles: string[]
-  defaultRole: string
-  otherClaims?: Record<string, string>
-  expiresIn?: string
 }
 
 class TokenGenerator {
@@ -56,26 +50,23 @@ class TokenGenerator {
     // The first signing converted all needed options into claims, they are already in the payload
     return jwt.sign(verified, this.secret, jwtSignOptions)
   }
-  signWithClaims(params: JWTParams) {
+  signWithClaims(_payload: any, signOptions?: SignOptions) {
     const payload = {
-      "https://hasura.io/jwt/claims": {
-        "x-hasura-allowed-roles": params.allowedRoles,
-        "x-hasura-default-role": params.defaultRole,
-        ...params.otherClaims,
-      },
+      [jwtClaims]: _payload,
     }
     return this.sign(payload, {
-      expiresIn: params.expiresIn || this.options.expiresIn,
+      expiresIn: signOptions?.expiresIn || this.options.expiresIn,
+      ...signOptions,
     })
   }
 }
 
 const tokenGenerator = new TokenGenerator(
-  Buffer.from(JWT_SECRET as string, "base64"),
+  Buffer.from(jwtSecret as string, "base64"),
   {
     algorithm: "HS256",
     noTimestamp: false,
-    expiresIn: JWT_TOKEN_EXPIRES_IN,
+    expiresIn: jwtTtl,
   }
 )
 

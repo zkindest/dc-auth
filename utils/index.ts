@@ -1,13 +1,16 @@
+import { CookieSerializeOptions, serialize } from "cookie"
+import { NextApiResponse } from "next"
+import { generalCookieAge, isProd, jwtClaims } from "~/constants"
 import { DecodedUser } from "~/types"
 import tokenGenerator from "./TokenGenerator"
 
 export const parseToken = (token: string): DecodedUser | null => {
   try {
     const decoded: any = tokenGenerator.verify(token)
-    const claims = decoded["https://hasura.io/jwt/claims"]
+    const claims = decoded[jwtClaims]
 
     return {
-      id: Number(claims["X-Hasura-User-Id"]),
+      id: Number(claims["X-Auth-User-Id"]),
       ...claims,
     }
   } catch (err) {
@@ -23,4 +26,23 @@ export const getCookie = (cookieStr: string | undefined, key: string) => {
     return ""
   }
   return cookie.split("=")[1]
+}
+
+export function setHardCookie(
+  name: string,
+  value: string,
+  res: NextApiResponse,
+  options?: CookieSerializeOptions
+) {
+  res.setHeader(
+    "Set-Cookie",
+    serialize(name, value, {
+      path: "/",
+      httpOnly: true,
+      maxAge: options?.maxAge || generalCookieAge,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      ...options,
+    })
+  )
 }
