@@ -1,18 +1,28 @@
-export const COLOR_MODE_KEY = "AFroz's-auth-color-mode"
+// GENERAL
+export const appUrl = process.env.NEXT_PUBLIC_APP_URL as string
 
-export const IS_PROD = process.env.NODE_ENV === "production"
+export const colorModeKey = "AFroz's-auth-color-mode"
+export const isProd = process.env.NODE_ENV === "production"
 
 // JWT
-export const JWT_SECRET = process.env.JWT_SECRET
-export const JWT_TOKEN_EXPIRES_IN = process.env.JWT_TOKEN_EXPIRES_IN
-export const JWT_REFRESH_TOKEN_EXPIRES_IN =
-  process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+export const jwtSecret = process.env.JWT_SECRET
+export const jwtTtl = 900000
+export const refreshTokenTtl = 900000
+export const jwtClaims = `${appUrl}/jwt/claims`
+export const jwtClaimPrefix = "x-auth"
 
-export const getRefreshTokenExpiryTime = () => {
-  if (!JWT_REFRESH_TOKEN_EXPIRES_IN)
-    throw new Error("refresh token expiry not set")
-  return Number(JWT_REFRESH_TOKEN_EXPIRES_IN)
-}
+// COOKIES
+export const generalCookieAge = 60 * 60 * 8 // 8 hours
 
-export const FINGERPRINT_COOKIE_NAME = "__Secure__User-Fgp"
-export const FINGERPRINT_COOKIE_MAX_AGE = 60 * 60 * 8 // 8 hours
+export const loginCookieName = "__Secure__User-Fgp"
+export const loginCookieAge = 60 * 60 * 8 // 8 hours
+export const OAuthCookieName = "__Secure__OAuth-Fgp"
+export const OAuthCookieAge = 60 * 60 * 8 // 8 hours
+export const refreshTokenCookieName = "__Secure__User-Refresh"
+export const accessTokenCookieName = "__Secure__User-Access"
+export const jwtCookieTtl = 60 * 60 * 8
+
+// AUTH PROVIDERS
+export const googleOAuthClientId = process.env.GOOGLE_OAUTH_CLIENT_ID as string
+export const googleOAuthClientSecret = process.env
+  .GOOGLE_OAUTH_CLIENT_SECRET as string
