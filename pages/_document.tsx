@@ -1,6 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document"
 import Terser from "terser"
-import { COLOR_MODE_KEY } from "../constants"
+import { colorModeKey } from "~/constants"
 import mem from "mem"
 
 const minify = mem(Terser.minify)
@@ -31,7 +31,7 @@ function setColorsByTheme() {
 }
 
 const MagicScriptTag = () => {
-  const boundFn = String(setColorsByTheme).replace("sdfsdfsf", COLOR_MODE_KEY)
+  const boundFn = String(setColorsByTheme).replace("sdfsdfsf", colorModeKey)
 
   let codeToRunOnClient = `(${boundFn})()`
 

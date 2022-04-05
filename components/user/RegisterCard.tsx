@@ -4,7 +4,11 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { userAtom } from "~/jotai/user"
-import { getAuthFetchOptions, setJwtToken, setRefreshToken } from "~/utils/auth"
+import {
+  getAuthFetchOptions,
+  setJwtToken,
+  setRefreshToken,
+} from "~/utils/client/auth"
 import { getValidation } from "~/utils/form-validation"
 import Button from "../Button"
 import { LockIconOutline, PersonOutline } from "../icons"

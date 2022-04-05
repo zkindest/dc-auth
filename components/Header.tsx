@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import { userAtom } from "~/jotai/user"
-import { removeJwtTokens } from "~/utils/auth"
+import { removeJwtTokens } from "~/utils/client/auth"
 import { ThemeContext } from "../lib/theme"
 import Button from "./Button"
 import { SunnyOutline } from "./icons"
@@ -17,7 +17,7 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await fetch("/api/user/logout", {
-        method: "GET",
+        method: "POST",
       })
       sessionStorage.clear()
       setUser(null)

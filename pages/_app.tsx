@@ -3,7 +3,7 @@ import { ThemeProvider } from "../lib/theme"
 import "../styles/base.css"
 
 import { useEffect } from "react"
-import { getAuthFetchOptions } from "~/utils/auth"
+import { getAuthFetchOptions } from "~/utils/client/auth"
 import { useAtom } from "jotai"
 import { userAtom } from "~/jotai/user"
 

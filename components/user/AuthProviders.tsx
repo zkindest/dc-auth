@@ -14,7 +14,12 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({}) => {
       <p>or continue with these social profile</p>
       <ul className="auth-providers">
         <li>
-          <GoogleIcon />
+          <a
+            href={`http://localhost:3000/api/auth?provider=google`}
+            rel="noopener follow"
+          >
+            <GoogleIcon />
+          </a>
         </li>
         <li>
           <FacebookIcon />
