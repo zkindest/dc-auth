@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { extractPaths, extractUriParams } from "~/utils/client"
 import { setJwtToken, setRefreshToken } from "~/utils/client/auth"
 
 interface callbackProps {}
 
 const Callback: React.FC<callbackProps> = ({}) => {
-  const [provider, setProvider] = useState("")
   useEffect(() => {
     try {
       ;(async () => {
         const { code, state } = extractUriParams(window.location.href)
         const provider = extractPaths(window.location.href)[1]
-        setProvider(provider)
 
         if (provider) {
           const result = await (
@@ -31,17 +29,14 @@ const Callback: React.FC<callbackProps> = ({}) => {
           window.location.replace("/user/info")
         } else {
           console.log({ provider })
-
-          console.error("no provider found")
+          throw new Error("oauth provider name not found")
         }
       })()
     } catch (err) {
       console.error(err)
+      throw new Error("oauth failed")
     }
   }, [])
-  if (!provider) {
-    return <div className="page-center">invalid provider!</div>
-  }
   return <div className="page-center">loading...</div>
 }
 
