@@ -6,3 +6,5 @@ export type DecodedUser = {
 }
 
 export type IUser = Omit<User, "password">
+
+export type Awaited<T> = T extends PromiseLike<infer U> ? U : T

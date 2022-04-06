@@ -1,67 +1,36 @@
 import { githubStrategy } from "~/lib/oauth/github"
 import { googleStrategy } from "~/lib/oauth/google"
 import { md5 } from "./crypto"
-import { ClientError } from "./error"
+import { ClientError, KnownError } from "./error"
+
+export type OAuthProvider = "google" | "github"
 
 export type OAuthTokenResult = {
-  access_token?: string
+  access_token: string
   expires_in?: number
   id_token?: string
   scope?: string
   token_type?: string
   refresh_token?: string
-  error?: string
 }
 export interface OAuthUserResult {
   id: string
   email: string
-  verified_email: boolean
   name?: string
+}
+export interface GoogleUserResult extends OAuthUserResult {
+  verified_email?: boolean
   given_name?: string
   family_name?: string
   picture?: string
   locale?: string
-  error?: {
-    code: number
-    message: string
-  }
 }
-export const getUserFromProvider = async (
-  provider: "google" | "github" | string,
-  access_token: string
-): Promise<OAuthUserResult> => {
-  switch (provider) {
-    case "google":
-      return getUserFromGoogle(access_token)
-    case "github":
-      return getUserFromGithub(access_token)
-    default:
-      throw new Error("invalid provider: " + provider)
-  }
-}
-export const getUserFromGoogle = async (token: string) => {
-  const result = await (
-    await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${token}`,
-        accept: "application/json",
-      },
-    })
-  ).json()
-  return result
-}
-export const getUserFromGithub = async (token: string) => {
-  const result = await (
-    await fetch("https://api.github.com/user", {
-      method: "GET",
-      headers: {
-        authorization: `token ${token}`,
-        accept: "application/json",
-      },
-    })
-  ).json()
-  return result
+export interface GithubUserResult extends OAuthUserResult {
+  avatar_url?: string
+  location?: string
+  bio?: string
+  // username
+  login?: string
 }
 export const getAuthUri = (provider: OAuthProvider, code: string) => {
   switch (provider) {
@@ -93,11 +62,48 @@ export const getTokensFromProvider = async (
   if (res.ok) {
     return res.json()
   }
-  return {
-    error: "failed to fetch tokens from provider",
+  throw new KnownError("failed to fetch tokens from provider")
+}
+export const fetchUserFromGoogle = async (
+  token: string
+): Promise<GoogleUserResult> => {
+  const result = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+      accept: "application/json",
+    },
+  })
+  if (result.ok) return result.json()
+  else throw new KnownError("failed fetch user info from google")
+}
+export const fetchUserFromGithub = async (
+  token: string
+): Promise<GithubUserResult> => {
+  const result = await fetch("https://api.github.com/user", {
+    method: "GET",
+    headers: {
+      authorization: `token ${token}`,
+      accept: "application/json",
+    },
+  })
+  if (result.ok) return result.json()
+  else throw new KnownError("failed fetch user info from github")
+}
+
+export const getUserDataFromProvider = async (
+  provider: OAuthProvider,
+  access_token: string
+) => {
+  switch (provider) {
+    case "google":
+      return fetchUserFromGoogle(access_token)
+    case "github":
+      return fetchUserFromGithub(access_token)
+    default:
+      throw new KnownError("invalid provider: " + provider)
   }
 }
-export type OAuthProvider = "google" | "github"
 
 export const extractUserData = (payload: any, provider: OAuthProvider) => {
   const data: any = {}
@@ -109,12 +115,12 @@ export const extractUserData = (payload: any, provider: OAuthProvider) => {
 
   switch (provider) {
     case "github": {
-      data.avatar = payload.avatar_id
-        ? `https://secure.gravatar.com/avatar/${payload.avatar_id}?s=164&d=identicon`
-        : payload.avatar_url ||
-          `https://secure.gravatar.com/avatar/${md5(
-            payload.email
-          )}?s=164&d=identicon`
+      data.avatar =
+        payload.avatar_url || payload.login
+          ? `https://github.com/${payload.login}.png?size=200`
+          : `https://secure.gravatar.com/avatar/${md5(
+              payload.email
+            )}?s=164&d=identicon`
     }
 
     case "google": {

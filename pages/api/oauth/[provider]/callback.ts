@@ -4,12 +4,12 @@ import { loginCookieAge, loginCookieName, OAuthCookieName } from "~/constants"
 import prisma from "~/lib/prisma"
 import { getCookie, setHardCookie } from "~/utils"
 import { sha256, SignWithUserClaims, uuidv4 } from "~/utils/crypto"
-import { ClientError } from "~/utils/error"
+import { ClientError, KnownError } from "~/utils/error"
 import {
   extractUserData,
   getAuthUri,
   getTokensFromProvider,
-  getUserFromProvider,
+  getUserDataFromProvider,
   OAuthProvider,
 } from "~/utils/oauth"
 
@@ -20,7 +20,7 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const { state, code } = req.body
-      const { provider } = req.query
+      const provider = req.query.provider as OAuthProvider
 
       if (!code || !provider) {
         res.status(400).json({
@@ -37,30 +37,17 @@ export default async function handler(
         })
       }
 
-      const { uri, payload } = getAuthUri(provider as OAuthProvider, code)
+      const { uri, payload } = getAuthUri(provider, code)
 
       const oAuthTokenResult = await getTokensFromProvider(uri, payload)
       console.log({ oAuthTokenResult })
 
-      if (oAuthTokenResult.error) {
-        res.status(500).json({
-          error: oAuthTokenResult.error,
-        })
-        return
-      }
-      // const decodedUser: any = decode(googleTokenResult.id_token)
-
-      const oAuthUserResult = await getUserFromProvider(
-        provider as string,
+      const oAuthUserResult = await getUserDataFromProvider(
+        provider,
         oAuthTokenResult.access_token!
       )
       console.log({ oAuthUserResult })
-      if (oAuthUserResult.error) {
-        res.status(401).json({
-          error: oAuthUserResult.error.message,
-        })
-        return
-      }
+
       if (!oAuthUserResult.email) {
         res.status(401).json({
           error: "email not available",
@@ -79,7 +66,7 @@ export default async function handler(
 
       if (!userFromDb) {
         // create a user
-        const data = extractUserData(oAuthUserResult, provider as OAuthProvider)
+        const data = extractUserData(oAuthUserResult, provider)
         userFromDb = await prisma.user.create({
           data: {
             ...data,
@@ -126,7 +113,11 @@ export default async function handler(
     }
   } catch (err) {
     console.error(err)
-    if (err instanceof ClientError) {
+    if (err instanceof KnownError) {
+      res.status(500).json({
+        error: err.message,
+      })
+    } else if (err instanceof ClientError) {
       res.status(400).json({
         error: err.message,
       })
