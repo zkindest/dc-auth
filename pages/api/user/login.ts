@@ -21,6 +21,10 @@ export default async function handler(
       if (!user) {
         return res.status(400).json({ error: "User not found" })
       }
+      if (!user.password) {
+        // OAuth user
+        return res.status(401).json({ error: "Invalid credentials" })
+      }
       const validPassword = await checkPassword(password, user.password)
 
       if (!validPassword) {
