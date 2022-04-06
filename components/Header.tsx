@@ -29,11 +29,15 @@ const Header = () => {
   }
   return (
     <header>
-      <Link href="/">
-        <a data-active={isActive("/")} className="logo">
-          Fancy Logo
-        </a>
-      </Link>
+      {user ? (
+        <div className="logo">Fancy Logo</div>
+      ) : (
+        <Link href="/">
+          <a data-active={isActive("/")} className="logo">
+            Fancy Logo
+          </a>
+        </Link>
+      )}
       <nav>
         {!user && (
           <Link href="/login">

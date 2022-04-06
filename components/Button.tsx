@@ -5,6 +5,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   size?: BasicSizes
   variant?: "outline" | "filled"
   fullWidth?: boolean
+  loading?: boolean
 }
 
 const Button = ({
@@ -12,11 +13,12 @@ const Button = ({
   variant = "filled",
   fullWidth,
   children,
+  loading,
   ...rest
 }: ButtonProps) => {
   return (
     <button {...rest}>
-      {children}
+      {loading ? "loading..." : children}
       <style jsx>
         {`
           button {

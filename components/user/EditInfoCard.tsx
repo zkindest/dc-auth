@@ -18,6 +18,7 @@ interface EditInfoCardProps {
 const EditInfoCard = ({ data }: EditInfoCardProps) => {
   const router = useRouter()
   const [_, setUser] = useAtom(userAtom)
+  const [loading, setLoading] = useState(false)
   const { id, email, ...editableTextFields } = data
   const ref = useRef<FileReader>()
   const [currentAvatar, setCurrentAvatar] = useState(editableTextFields.avatar)
@@ -52,14 +53,19 @@ const EditInfoCard = ({ data }: EditInfoCardProps) => {
     }
   }, [])
   const handleFileChange = (event: any) => {
-    let file = event.target.files[0]
-    if (!file.type.startsWith("image/")) {
-      alert("invalid file type")
-    }
+    try {
+      let file = event.target.files[0]
+      if (!file.type.startsWith("image/")) {
+        alert("invalid file type")
+      }
 
-    ref.current?.readAsDataURL(file)
+      ref.current?.readAsDataURL(file)
+    } catch (error) {
+      console.error(error)
+    }
   }
   const onSubmit = async (data: any) => {
+    setLoading(true)
     const formData = new FormData()
     for (const key in data) {
       if (key === "avatar") {
@@ -85,6 +91,8 @@ const EditInfoCard = ({ data }: EditInfoCardProps) => {
       router.push("/user/info")
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -156,7 +164,9 @@ const EditInfoCard = ({ data }: EditInfoCardProps) => {
           error={"password" in errors ? errors["password"]?.message : ""}
         />
         <br /> */}
-        <Button type="submit">Save</Button>
+        <Button type="submit" loading={loading}>
+          Save
+        </Button>
       </form>
       <style jsx>{`
         .info-table {

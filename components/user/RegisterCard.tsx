@@ -26,10 +26,12 @@ const RegisterCard = ({}: RegisterCardProps) => {
   } = useForm()
   const [_, setUser] = useAtom(userAtom)
   const [formError, setFormError] = useState("")
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true)
       const result = await (
         await fetch("/api/user", {
           method: "POST",
@@ -62,6 +64,8 @@ const RegisterCard = ({}: RegisterCardProps) => {
     } catch (error) {
       console.error(error)
       setFormError("something went wrong!")
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -103,7 +107,7 @@ const RegisterCard = ({}: RegisterCardProps) => {
           )}
           error={"password" in errors ? errors["password"].message : ""}
         />
-        <Button type="submit" className="mt-5" fullWidth>
+        <Button type="submit" className="mt-5" fullWidth loading={loading}>
           Start coding now
         </Button>
       </form>

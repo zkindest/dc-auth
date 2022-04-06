@@ -27,8 +27,11 @@ const LoginCard = ({}: LoginCardProps) => {
   const [_, setUser] = useAtom(userAtom)
   const [formError, setFormError] = useState("")
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true)
       const result = await (
         await fetch("/api/user/login", {
           method: "POST",
@@ -59,6 +62,8 @@ const LoginCard = ({}: LoginCardProps) => {
     } catch (error) {
       console.error(error)
       setFormError("something went wrong!")
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -88,7 +93,7 @@ const LoginCard = ({}: LoginCardProps) => {
           )}
           error={"password" in errors ? errors["password"].message : ""}
         />
-        <Button type="submit" className="mt-5" fullWidth>
+        <Button type="submit" className="mt-5" fullWidth loading={loading}>
           Start coding now
         </Button>
       </form>
