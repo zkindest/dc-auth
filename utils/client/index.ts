@@ -15,3 +15,15 @@ export const extractUriParams = (uri: string) => {
 
   return params
 }
+
+export const extractPaths = (uri: string) => {
+  const { pathname } = new URL(uri)
+  if (!pathname) {
+    throw new Error("URI does not have paths. Cannot continue.")
+  }
+
+  return pathname
+    .split("/")
+    .slice(1)
+    .filter((path) => path)
+}
