@@ -77,7 +77,7 @@ export const googleStrategy = new GoogleStrategy({
   clientId: googleOAuthClientId,
   clientSecret: googleOAuthClientSecret,
   redirectURI: `${appUrl}/oauth/google/callback`,
-  scope: ["openid", "email"],
+  scope: ["openid", "email", "profile"],
 })
 
 export default GoogleStrategy
