@@ -16,6 +16,9 @@ export default async function handler(
         })
       )
       return res.json({ ok: true })
+    } else {
+      res.setHeader("Allow", ["POST"])
+      res.status(405).end(`Method ${req.method} Not Allowed`)
     }
   } catch (err) {
     console.error(err)

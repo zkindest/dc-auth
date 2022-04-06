@@ -12,7 +12,7 @@ export default async function handler(
     if (req.method === "POST") {
       const { refreshToken, fingerPrintHash } = req.body
 
-      // get raw cookie from req headers
+      // get un-hashed fingerprint cookie from req headers
       const fingerprintCookie = getCookie(req.headers.cookie, loginCookieName)
       console.log({ fingerprintCookie })
       if (!fingerprintCookie) {
@@ -40,12 +40,13 @@ export default async function handler(
       })
       if (!user) return res.status(400).json({ error: "refreshToken expired" })
 
+      // Re-New refresh token
       await prisma.session.update({
         where: {
           id: user.id,
         },
         data: {
-          refreshToken: uuidv4(), // Re-New refresh token
+          refreshToken: uuidv4(),
           refreshTokenExpiresAt: new Date(
             Date.now() + refreshTokenTtl
           ).toISOString(),
@@ -55,9 +56,12 @@ export default async function handler(
 
       return res.status(200).json({
         data: {
-          jwt, // we are not sending refreshToken (one time refresh only)
+          jwt, // we are not sending refreshToken again (one time refresh only)
         },
       })
+    } else {
+      res.setHeader("Allow", ["POST"])
+      res.status(405).end(`Method ${req.method} Not Allowed`)
     }
   } catch (err) {
     console.error(err)

@@ -7,7 +7,7 @@ import prisma from "~/lib/prisma"
 import { parseToken } from "~/utils"
 import { getUserFromDB, UserSelect } from "."
 
-export const isAuthenticated = (req: NextApiRequest, res: NextApiResponse) => {
+export const isAuthenticated = (req: NextApiRequest) => {
   const rawToken = req.headers["authorization"] || ""
   const token = rawToken.split(" ")[1]
   const user = parseToken(token)
@@ -38,12 +38,12 @@ export default async function handler(
     })
   }
 
+  if (!isAuthenticated(req))
+    return res.status(400).json({ error: "user not authenticated" })
+
   try {
     switch (method) {
       case "GET": {
-        if (!isAuthenticated(req, res))
-          return res.status(400).json({ error: "user not authenticated" })
-
         const user = getUserFromDB(userId)
         if (!user) {
           res.status(400).json({ error: "user not found" })
@@ -53,9 +53,6 @@ export default async function handler(
       }
       case "PUT": {
         try {
-          if (!isAuthenticated(req, res))
-            return res.status(400).json({ error: "user not authenticated" })
-
           const { files, fields } = await formidableParse(req)
 
           // console.log({ fields, files })
@@ -95,8 +92,6 @@ export default async function handler(
         break
       }
       case "DELETE": {
-        if (!isAuthenticated(req, res))
-          return res.status(400).json({ error: "user not authenticated" })
         await prisma.user.delete({
           where: { id: userId },
         })

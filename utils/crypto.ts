@@ -45,3 +45,7 @@ export function SignWithUserClaims(user: { id: number }, fingerprint?: string) {
     ...(fingerprint ? { "X-Auth-FingerPrint": fingerprint } : null),
   })
 }
+
+export function md5(value: string) {
+  return crypto.createHash("md5").update(value).digest("hex")
+}

@@ -1,13 +1,12 @@
 import { Prisma } from "@prisma/client"
-import md5 from "md5"
 import { NextApiRequest, NextApiResponse } from "next"
 import { loginCookieAge, loginCookieName, refreshTokenTtl } from "~/constants"
 import prisma from "~/lib/prisma"
 import { parseToken, setHardCookie } from "~/utils"
-import { hashPassword, SignWithUserClaims, uuidv4 } from "~/utils/crypto"
+import { hashPassword, SignWithUserClaims, uuidv4, md5 } from "~/utils/crypto"
 import crypto from "crypto"
 
-export const getUserFromToken = (req: NextApiRequest, res: NextApiResponse) => {
+export const getUserFromToken = (req: NextApiRequest) => {
   const rawToken = req.headers["authorization"] || ""
   const token = rawToken.split(" ")[1]
   const user = parseToken(token)
@@ -46,7 +45,7 @@ export default async function handler(
   try {
     switch (method) {
       case "GET": {
-        const decodedUser = getUserFromToken(req, res)
+        const decodedUser = getUserFromToken(req)
         if (!decodedUser)
           return res.status(400).json({ error: "Invalid credentials" })
 
@@ -67,7 +66,6 @@ export default async function handler(
           return
         }
         const refreshToken = uuidv4()
-
         const newUser = await prisma.user.create({
           data: {
             bio: "",

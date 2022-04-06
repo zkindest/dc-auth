@@ -6,6 +6,7 @@ import { useEffect } from "react"
 import { getAuthFetchOptions } from "~/utils/client/auth"
 import { useAtom } from "jotai"
 import { userAtom } from "~/jotai/user"
+import ErrorBoundary from "~/components/ErrorBoundary"
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -27,7 +28,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [setUser])
   return (
     <ThemeProvider>
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
     </ThemeProvider>
   )
 }
