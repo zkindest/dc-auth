@@ -1,4 +1,5 @@
 import React from "react"
+import { appUrl } from "~/constants"
 import {
   FacebookIcon,
   GithubIcon,
@@ -14,21 +15,20 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({}) => {
       <p>or continue with these social profile</p>
       <ul className="auth-providers">
         <li>
-          <a
-            href={`http://localhost:3000/api/auth?provider=google`}
-            rel="noopener follow"
-          >
+          <a href={`${appUrl}/api/oauth/google`} rel="noopener follow">
             <GoogleIcon />
           </a>
         </li>
         <li>
-          <FacebookIcon />
+          <a href={`${appUrl}/api/oauth/github`} rel="noopener follow">
+            <GithubIcon />
+          </a>
         </li>
         <li>
           <TwitterIcon />
         </li>
         <li>
-          <GithubIcon />
+          <FacebookIcon />
         </li>
       </ul>
       <style jsx>{`

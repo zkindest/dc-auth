@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { googleStrategy } from "~/lib/auth/google"
+import { googleStrategy } from "~/lib/oauth/google"
 import crypto from "node:crypto"
 import { setHardCookie } from "~/utils"
 import { OAuthCookieAge, OAuthCookieName } from "~/constants"
 import { sha256 } from "~/utils/crypto"
+import { githubStrategy } from "~/lib/oauth/github"
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,8 +13,9 @@ export default async function handler(
   try {
     if (req.method === "GET") {
       const { provider } = req.query
+
       if (!provider) {
-        return res.redirect("/")
+        return res.status(400).json({ error: "invalid provider" })
       }
       const state = crypto.randomBytes(512).toString("hex")
 
@@ -21,12 +23,24 @@ export default async function handler(
         maxAge: OAuthCookieAge,
       })
       let verificationUri
-      if (provider === "google") {
-        verificationUri = googleStrategy.getVerificationUri({
-          accessType: "offline",
-          prompt: "consent",
-          state: sha256(state),
-        })
+      switch (provider) {
+        case "google":
+          verificationUri = googleStrategy.getVerificationUri({
+            accessType: "offline",
+            prompt: "consent",
+            state: sha256(state),
+          })
+          break
+
+        case "github":
+          verificationUri = githubStrategy.getVerificationUri({
+            accessType: "offline",
+            prompt: "consent",
+            state: sha256(state),
+          })
+          break
+        default:
+          break
       }
 
       if (verificationUri) {

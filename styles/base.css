@@ -153,3 +153,10 @@ button {
   overflow-wrap: anywhere;
   word-break: break-all;
 }
+
+.page-center {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  align-items: center;
+}

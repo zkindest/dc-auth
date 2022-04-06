@@ -23,6 +23,10 @@ export const accessTokenCookieName = "__Secure__User-Access"
 export const jwtCookieTtl = 60 * 60 * 8
 
 // AUTH PROVIDERS
+export const githubOAuthClientId = process.env.GITHUB_OAUTH_CLIENT_ID as string
+export const githubOAuthClientSecret = process.env
+  .GITHUB_OAUTH_CLIENT_SECRET as string
+
 export const googleOAuthClientId = process.env.GOOGLE_OAUTH_CLIENT_ID as string
 export const googleOAuthClientSecret = process.env
   .GOOGLE_OAUTH_CLIENT_SECRET as string
