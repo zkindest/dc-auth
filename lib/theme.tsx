@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react"
-import { COLOR_MODE_KEY } from "../constants"
+import { colorModeKey } from "../constants"
 
 type ThemeProps = {
   colorMode: "dark" | "light" | string
@@ -23,7 +23,7 @@ export const ThemeProvider = ({ children }: any) => {
       rawSetColorMode(newValue)
 
       // 2. Update localStorage
-      localStorage.setItem(COLOR_MODE_KEY, newValue)
+      localStorage.setItem(colorModeKey, newValue)
 
       // 3. Update each color
       if (newValue == "dark") {
