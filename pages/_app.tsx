@@ -30,6 +30,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 const LoadInitialUser = () => {
   const [_, setUser] = useAtom(userAtom)
 
+  // read about `useLayoutEffect`: https://kentcdodds.com/blog/useeffect-vs-uselayouteffect#uselayouteffect
   useLayoutEffect(() => {
     // to avoid state updates after component unmount
     // see: https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
