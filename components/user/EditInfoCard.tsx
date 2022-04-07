@@ -1,5 +1,6 @@
 import { useAtom } from "jotai"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -164,9 +165,12 @@ const EditInfoCard = ({ data }: EditInfoCardProps) => {
           error={"password" in errors ? errors["password"]?.message : ""}
         />
         <br /> */}
-        <Button type="submit" loading={loading}>
-          Save
-        </Button>
+        <div className="cta">
+          <Button type="submit" loading={loading}>
+            {loading ? "loading..." : "Save"}
+          </Button>
+          <Link href={"/user/info"}>Cancel</Link>
+        </div>
       </form>
       <style jsx>{`
         .info-table {
@@ -212,6 +216,11 @@ const EditInfoCard = ({ data }: EditInfoCardProps) => {
         form {
           margin: 2rem 0;
           width: 50%;
+        }
+        .cta {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
         }
         @media (max-width: 640px) {
           .info-table {

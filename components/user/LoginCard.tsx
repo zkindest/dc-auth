@@ -94,7 +94,7 @@ const LoginCard = ({}: LoginCardProps) => {
           error={"password" in errors ? errors["password"].message : ""}
         />
         <Button type="submit" className="mt-5" fullWidth loading={loading}>
-          Start coding now
+          {loading ? "loading..." : "Start coding now"}
         </Button>
       </form>
       <AuthProviders />

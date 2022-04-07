@@ -32,18 +32,18 @@ const InfoCard = ({ data }: InfoCardProps) => {
         Object.entries(data).map(([key, value], i) => (
           <div className="row" key={i}>
             <div className="name">{key}</div>
-            {key === "avatar" ? (
-              <div className="data avatar">
+            <div className={`data ${key === "avatar" ? key : ""}`}>
+              {key === "avatar" ? (
                 <Image
                   src={data.avatar}
                   alt="avatar"
                   width={100}
                   height={100}
                 />
-              </div>
-            ) : (
-              <div className="data">{value}</div>
-            )}
+              ) : (
+                value
+              )}
+            </div>
           </div>
         ))}
       <style jsx>
@@ -65,6 +65,7 @@ const InfoCard = ({ data }: InfoCardProps) => {
           .row {
             display: flex;
             align-content: center;
+            align-items: center;
           }
           .row .name {
             min-width: 30%;
@@ -93,6 +94,7 @@ const InfoCard = ({ data }: InfoCardProps) => {
           .head {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid var(--clr-gray-3);
           }
           .row + .row {
@@ -102,6 +104,9 @@ const InfoCard = ({ data }: InfoCardProps) => {
             .info-table {
               border: 0;
               text-align: left;
+              font-size: 0.8rem;
+              border-bottom: 1px solid var(--clr-gray-2);
+              border-radius: 0;
             }
             .head {
               border: 0;

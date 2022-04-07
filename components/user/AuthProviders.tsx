@@ -16,20 +16,20 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({}) => {
       <ul className="auth-providers">
         <li>
           <a href={`${appUrl}/api/oauth/google`} rel="noopener follow">
-            <GoogleIcon />
+            <GoogleIcon aria-hidden={false} />
           </a>
         </li>
         <li>
           <a href={`${appUrl}/api/oauth/github`} rel="noopener follow">
-            <GithubIcon />
+            <GithubIcon aria-hidden={false} />
           </a>
         </li>
-        <li>
-          <TwitterIcon />
+        {/* <li>
+          <TwitterIcon aria-hidden={false} />
         </li>
         <li>
-          <FacebookIcon />
-        </li>
+          <FacebookIcon aria-hidden={false} />
+        </li> */}
       </ul>
       <style jsx>{`
         .auth {

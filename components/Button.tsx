@@ -14,11 +14,12 @@ const Button = ({
   fullWidth,
   children,
   loading,
+  className = "",
   ...rest
 }: ButtonProps) => {
   return (
-    <button {...rest}>
-      {loading ? "loading..." : children}
+    <button {...rest} className={`${className} ${loading ? "loading" : ""}`}>
+      {children}
       <style jsx>
         {`
           button {
@@ -38,7 +39,8 @@ const Button = ({
             font-weight: bold;
             color: ${variant === "filled" ? "#eee" : "var(--clr-gray-1)"};
           }
-          button[disabled] {
+          button[disabled],
+          button.loading {
             cursor: not-allowed;
             background: ${variant === "filled"
               ? "var(--clr-blue-2)"

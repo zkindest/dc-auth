@@ -104,10 +104,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           background-color: var(--clr-bg-elements);
           border-radius: 8px;
         }
-        .o_field__input:hover > fieldset {
-          border-color: var(--clr-input-active);
-          border-width: 1px;
-        }
         input {
           border: 0;
           outline: 0;
@@ -132,9 +128,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function TextField(
           border-radius: inherit;
           pointer-events: none;
         }
-        input:focus ~ fieldset {
+        .o_field__body input:focus ~ fieldset {
           border-width: 2px;
           border-color: var(--clr-input-active);
+        }
+        .o_field__input:hover > fieldset {
+          border-color: var(--clr-input-active);
+          border-width: 1px;
         }
         .o_field__input fieldset.field__error {
           border-color: red !important;

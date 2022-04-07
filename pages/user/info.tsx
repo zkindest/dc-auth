@@ -41,7 +41,10 @@ const Info = () => {
           }
           @media (max-width: 640px) {
             h1 {
-              font-size: 2rem;
+              font-size: 1.5rem;
+            }
+            section {
+              padding: 1rem 0 3rem;
             }
           }
         `}</style>

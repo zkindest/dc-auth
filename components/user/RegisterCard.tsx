@@ -108,7 +108,7 @@ const RegisterCard = ({}: RegisterCardProps) => {
           error={"password" in errors ? errors["password"].message : ""}
         />
         <Button type="submit" className="mt-5" fullWidth loading={loading}>
-          Start coding now
+          {loading ? "loading..." : "Start coding now"}
         </Button>
       </form>
       <AuthProviders />
@@ -133,6 +133,9 @@ const RegisterCard = ({}: RegisterCardProps) => {
             .card {
               border: 0;
               padding: 1.5rem;
+            }
+            .card__logo {
+              display: none;
             }
           }
           logo {
