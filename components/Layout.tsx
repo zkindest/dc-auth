@@ -12,14 +12,14 @@ const Layout = ({ children }: LayoutProps) => {
       <Header />
       <main>{children}</main>
       <footer>
-        built with with Next.js, Prisma and{" "}
+        built with Next.js, Prisma and{" "}
         <a
           href="https://gist.github.com/zkindest/d5cfdef2d1b7767e8df321f9fd56f79b"
           className="link"
         >
           Open source
         </a>
-        .by{" "}
+        . by{" "}
         <a href="https://twitter.com/zkindest" className="link">
           @zkindest
         </a>
