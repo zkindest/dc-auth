@@ -17,7 +17,7 @@ export default async function handler(
       if (!provider) {
         return res.status(400).json({ error: "invalid provider" })
       }
-      const state = crypto.randomBytes(512).toString("hex")
+      const state = crypto.randomBytes(50).toString("hex")
 
       setHardCookie(OAuthCookieName, state, res, {
         maxAge: OAuthCookieAge,

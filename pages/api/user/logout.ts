@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next"
 import { serialize } from "cookie"
+import { NextApiRequest, NextApiResponse } from "next"
 import { loginCookieName } from "~/constants"
 
 export default async function handler(
