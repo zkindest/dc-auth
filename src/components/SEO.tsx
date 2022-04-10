@@ -1,5 +1,5 @@
 import React from "react"
-import defaults from "config"
+import defaults from "~/config"
 import Head from "next/head"
 type SEOProps = {
   title?: string
