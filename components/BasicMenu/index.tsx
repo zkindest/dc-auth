@@ -100,6 +100,7 @@ const BasicMenu = ({
           background-color: var(--clr-white);
           color: var(--clr-text);
           opacity: 0;
+          transition: opacity 0.3s ease;
         }
         .menu.open .menu__children {
           visibility: visible;
