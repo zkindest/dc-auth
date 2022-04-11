@@ -4,7 +4,7 @@
 
 > To learn how to do various oauth provider integrations.
 
-### Tech stack
+## Tech stack
 
 - Next.js (batteries(bundling, router, image optimizations etc) included)
 - Prisma ORM
@@ -24,6 +24,10 @@
 ```sh
 yarn dev
 ```
+## Credits
+
+1. [open source](https://gist.github.com/zkindest/d5cfdef2d1b7767e8df321f9fd56f79b)
+2. Thanks to [@thunghiemdinh](https://twitter.com/thunghiemdinh) for create and maintaining [devchallenges](https://devchallenges.io/)
 
 ## Next steps
 
