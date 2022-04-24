@@ -2,7 +2,9 @@
   "name": "auth-example",
   "version": "1.0.0",
   "description": "",
-  "keywords": [],
+  "keywords": [
+    "OAuth2"
+  ],
   "license": "MIT",
   "author": "",
   "main": "index.js",
