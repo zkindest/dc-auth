@@ -2,7 +2,11 @@
 
 ## About
 
-> To learn how to do various oauth provider integrations (check out [DevChallenges](https://devchallenges.io/challenges/N1fvBjQfhlkctmwj1tnw) for details).
+> To learn how to integrate various oauth providers (check out [DevChallenges](https://devchallenges.io/challenges/N1fvBjQfhlkctmwj1tnw) for details).
+
+## Todo
+
+- add Twitter and other
 
 ## Tech stack
 
