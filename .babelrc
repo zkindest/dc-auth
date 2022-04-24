@@ -1,0 +1,15 @@
+{
+  "presets": [["next/babel"]],
+  "env": {
+    "production": {
+      "plugins": ["styled-jsx/babel"]
+    },
+    "development": {
+      "plugins": ["styled-jsx/babel"]
+    },
+    // Todo: still not working (see: https://github.com/vercel/styled-jsx#rendering-in-tests)
+    "test": {
+      "plugins": ["styled-jsx/babel-test"]
+    }
+  }
+}
